@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html ng-app>
+  <head>
+    <title>Class Maker</title>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <script type="text/javascript">
+
+    function ProjectController($scope) {
+        studentClass = {'name': 'Student', 'fields': [
+            {'name': 'name', 'type': 'String', 'visibility': 'default'},
+            {'name': 'studentnummer', 'type': 'int', 'visibility': 'default'}
+
+        ], 'methods': [
+            {'name': 'identify', 'return': 'void', 'visibility': 'public', 'parameters': []}
+        ]};
+        $scope.classes = [studentClass];
+    }
+
+    function ClassController($scope) {
+        $scope.addField = function() {
+            $scope.class.fields.push({'name': 'name', 'type': 'String', 'visibility': 'default'});
+        }
+
+        $scope.deleteField = function(index) {
+            $scope.class.fields.splice(index, 1);
+        }
+
+        $scope.addMethod = function() {
+            $scope.class.methods.push({'name': 'identify', 'return': 'void', 'visibility': 'public', 'parameters': []});
+        }
+
+        $scope.deleteMethod = function(index) {
+            $scope.class.methods.splice(index, 1);
+        }
+    }
+
+    </script>
+    <style type="text/css">
+    .class {
+        width: 300px;
+        float: left;
+        border: 1px solid black;
+    }
+
+    .keyword {
+        font-weight: bold;
+        color: brown;
+    }
+
+    .java {
+
+    }
+    </style>
+  </head>
+
+  <body ng-controller="ProjectController">
+
+    Klassen:
+    <div ng-repeat="class in classes" ng-controller="ClassController" class="class">
+      <input ng-model="class.name" />
+
+      <div>
+        Instance variabelen (wat weten we over een {{class.name}}?):
+        <div ng-repeat="field in class.fields">
+          <fieldset>
+            Type: <select ng-model="field.type"><option>String</option><option>int</option></select>
+            <input ng-model="field.name" />
+            <button ng-click="deleteField($index)">X</button>
+          </fieldset>
+        </div>
+        <button ng-click="addField()">Voeg instance variabele toe</button>
+      </div>
+
+      <div>
+        Methodes (wat kan een {{class.name}}?):
+        <div ng-repeat="method in class.methods">
+          <fieldset>
+            <input ng-model="method.name" />
+            <button ng-click="deleteMethod($index)">X</button>
+          </fieldset>
+        </div>
+        <button ng-click="addMethod($index)">Voeg methode toe</button>
+      </div>
+
+    </div>
+
+    <code class="java"> De Java:
+      <div ng-repeat="class in classes">
+      <span class="keyword">public</span> <span class="keyword">class</span> {{class.name}} {<br />
+      <br />
+      <div ng-repeat="field in class.fields">
+         &nbsp;&nbsp;&nbsp; {{field.type}} {{field.name}};
+      </div>
+      <br />
+      <div ng-repeat="method in class.methods">
+         &nbsp;&nbsp;&nbsp; <span class="keyword">public</span> <span class="keyword">void</span> {{method.name}}() {<br>
+             <br>
+         &nbsp;&nbsp;&nbsp; }<br />
+         <br />
+      </div>
+
+
+      }
+      </div>
+    </code>
+
+
+  </body>
+</html>
